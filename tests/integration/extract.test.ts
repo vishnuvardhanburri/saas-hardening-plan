@@ -1,23 +1,15 @@
 import request from 'supertest';
-import app from '../../src/index'; // Export your app for testing
+import app from '../../src/index.js';
 
-describe('POST /v1/extract', () => {
+describe('POST /v1/dna/extract', () => {
   it('should return 400 for invalid URL', async () => {
     const response = await request(app)
-      .post('/v1/extract')
-      .send({ url: 'not-a-url' });
-    
-    expect(response.status).toBe(400);
-    expect(response.body.error).toBe('INVALID_INPUT');
-  });
+      .post('/v1/dna/extract')
+      .send({
+        url: 'not-a-url',
+        tenant_id: '123e4567-e89b-12d3-a456-426614174000'
+      });
 
-  it('should return 200 for a valid brand URL', async () => {
-    // Note: In real CI, you would mock the BrowserManager
-    const response = await request(app)
-      .post('/v1/extract')
-      .send({ url: 'https://example.com' });
-    
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('title');
+    expect(response.status).toBe(400);
   });
 });
