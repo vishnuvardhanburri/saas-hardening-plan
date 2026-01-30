@@ -1,5 +1,4 @@
 import { BrowserManager } from '../infrastructure/browser_manager';
-import { BrandExtractionSchema } from '../api/validation';
 import { logger } from '../utils/logger';
 
 export class BrandService {
@@ -14,13 +13,11 @@ export class BrandService {
       return await BrowserManager.execute(async (page) => {
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
         
-        // Extraction logic focusing on CSS variables and meta data
         const dna = await page.evaluate(() => {
           return {
             title: document.title,
-            colors: Array.from(document.styleSheets)
-              .flatMap(sheet => Array.from(sheet.cssRules))
-              // logic to filter brand-specific variables...
+            description: document.querySelector('meta[name="description"]')?.getAttribute('content') || '',
+            // Logic for brand-specific variable extraction
           };
         });
 
